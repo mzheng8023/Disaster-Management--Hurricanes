@@ -1,0 +1,65 @@
+#Reading File
+trail1 = pd.read_csv("project.csv", sep = ',')
+
+# Removing special characters in tweets attribute and replacing with ' '
+trail1['tweet1'] = trail1.tweet.str.replace('[', '')
+trail1['tweet1'] = trail1.tweet1.str.replace('"', '')
+trail1['tweet1'] = trail1.tweet1.str.replace(']', '')
+
+# Removing special characters in location attribute and replacing with ' '
+trail1['location'] = trail1.location.str.replace('"', '')
+trail1['location'] = trail1.location.str.replace('[', '')
+trail1['location'] = trail1.location.str.replace(']', '')
+
+# Removing special characters in time attribute and replacing with ' '
+trail1['time'] = trail1.time.str.replace('}', '')
+trail1['time'] = trail1.time.str.replace('tweets', '')
+trail1['time'] = trail1.time.str.replace(']', '')
+trail1['time'] = trail1.time.str.replace('[', '')
+trail1['time'] = trail1.time.str.replace('}', '')
+trail1['time'] = trail1.time.str.replace('[', '')
+
+#Splitting location attribute into multiple attributes
+df3 = trail1['location'].str.split(',', expand=True)
+df3.columns = ['STATUS_ID{}'.format(x+1) for x in df3.columns]
+trail1 = trail1.join(df3)
+# Removing unwanted location attributes
+trail1.drop(['STATUS_ID10', 'STATUS_ID9', 'STATUS_ID8', 'STATUS_ID7', 'STATUS_ID6', 'STATUS_ID5', 'STATUS_ID4'], axis = 1, inplace = True)
+
+
+#NATURAL LANGUAGE PROCESSING
+import pandas as pd
+import nltk
+from nltk import word_tokenize
+
+#Word Tokenizing
+trail1['tweets5'] = trail1.apply(lambda row: nltk.word_tokenize(row['tweet1']), axis=1)
+
+#Removing Stop words
+from nltk.corpus import stopwords
+stop = stopwords.words('english')
+trail1['tweets5'] = tweet.apply(lambda x: [item for item in x if item not in stop])
+
+#Implementing Lemmatization 
+from nltk.stem import PorterStemmer
+from nltk.stem import LancasterStemmer
+porter = PorterStemmer()
+lancaster=LancasterStemmer()
+def lemmatize_text(tweet):
+ return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(tweet)]
+str(tweet).text.apply(lemmatize_text)
+
+# Identifyiing frequency of top 10 highly used words
+freq1 = pd.Series(' '.join(str(v) for v in trail1['tweet7']).split()).value_counts()[:60]
+print(freq1)
+
+#Removing Special characters
+trail1['tweet6'] = trail1['tweets5'].map(lambda x: re.sub(r'\W+', ' ', str(x)))
+#Tokenization
+trail1['tweet7'] = trail1.apply(lambda row: nltk.word_tokenize(row['tweet6']), axis=1)
+
+
+# Exporting to csv file
+ trail1.to_csv(r'project1.csv')
+ 
+
