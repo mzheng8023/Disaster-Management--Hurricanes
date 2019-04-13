@@ -1,0 +1,2 @@
+from textblob import TextBlob
+trail4[['polarity', 'subjectivity']] = trail4['Tweet'].apply(lambda Text: pd.Series(TextBlob(Text).sentiment))
